@@ -36,7 +36,7 @@ const HomeBanner = (props) => {
 
         <div className="home-banner-image">
           <picture>
-            <img src={image} alt="banner" className="image" />
+            <img src={image} alt="banner" className="image" loading="lazy" />
           </picture>
         </div>
       </div>
