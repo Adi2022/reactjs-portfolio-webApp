@@ -3,10 +3,17 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { CgMenu } from "react-icons/cg";
 import { CgCloseR } from "react-icons/cg";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Button } from "../common/Button";
 
 const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
-
+  const { loginWithRedirect } = useAuth0();
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { logout } = useAuth0();
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
   return (
     <Nav>
       <div className={openMenu ? "menuIcon active" : "menuIcon"}>
@@ -31,6 +38,19 @@ const Navbar = () => {
               Contact
             </NavLink>
           </li>
+         <li>{isAuthenticated && <p>{user.name}</p>}</li>
+          {
+            isAuthenticated ?<li>
+            <Button 
+              onClick={() => logout({ returnTo: window.location.origin })}
+            >
+              LogOut
+            </Button>
+          </li>: <li>
+            <Button onClick={() => loginWithRedirect()}>LogIn</Button>
+          </li>
+          }
+          
         </ul>
         <div className="mobile-navbar-btn">
           <CgMenu
@@ -55,38 +75,36 @@ const Nav = styled.nav`
 
     li {
       list-style: none;
-    
 
-    .navbar-links {
-      &:link,
-      &:visited {
-        display: inline-block;
-        text-decoration: none;
-        font-size: 1.8rem;
-        text-transform: uppercase;
-        color: ${({ theme }) => theme.colors.black};
-        transition: color 0.3s linear;
-      }
-      &:hover,
-      &:active {
-        color: ${({ theme }) => theme.colors.helper};
+      .navbar-links {
+        &:link,
+        &:visited {
+          display: inline-block;
+          text-decoration: none;
+          font-size: 1.8rem;
+          text-transform: uppercase;
+          color: ${({ theme }) => theme.colors.black};
+          transition: color 0.3s linear;
+        }
+        &:hover,
+        &:active {
+          color: ${({ theme }) => theme.colors.helper};
+        }
       }
     }
   }
-}
 
   .mobile-navbar-btn {
-     display: none;
-  .close-outline {
-     display: none;
-    } 
+    display: none;
+    .close-outline {
+      display: none;
+    }
   }
   .mobile-navbar-btn[name="close-outline"] {
     display: none;
   }
 
-
-  @media (max-width:${({ theme }) => theme.media.mobile}) {
+  @media (max-width: ${({ theme }) => theme.media.mobile}) {
     .mobile-navbar-btn {
       display: inline-block;
       z-index: 999;

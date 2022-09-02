@@ -23,7 +23,7 @@ const Home = () => {
       // {...data}
       />
       <Services/>
-      <About/>
+      {/* <About/> */}
       <Contact/>
     </div>
   );
